@@ -54,8 +54,9 @@ public class ShiftInstance implements Comparable<ShiftInstance> {
 		this.team = team;
 	}
 
-	ShiftInstance(DayOff dayOff,Team team) {
+	ShiftInstance(DayOff dayOff,LocalDateTime startDateTime,Team team) {
 		this.dayOff = dayOff;
+		this.startDateTime = startDateTime;
 		this.team = team;
 	}
 

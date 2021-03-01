@@ -199,9 +199,9 @@ public class Team extends Named implements Comparable<Team> {
 			instance = new ShiftInstance((Shift) period, startDateTime, this);
 		}else{
 			//  youngil 추가
-			LocalDateTime startDateTime = LocalDateTime.of(day, period.getStart());
-			if(period.isWorkingOffPeriod()){
-				instance = new ShiftInstance((DayOff)period,this);
+			LocalDateTime startDateTime = LocalDateTime.of(day, LocalTime.MIDNIGHT);
+			if(period.enumTimePeriod.equals(EnumTimePeriod.DAYOFF)){
+				instance = new ShiftInstance((DayOff)period,startDateTime,this);
 			}
 
 		}

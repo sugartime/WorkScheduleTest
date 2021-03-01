@@ -52,6 +52,7 @@ abstract class TimePeriod extends Named {
 
 	protected TimePeriod(String name, String description, EnumTimePeriod enumTimePeriod, LocalTime startTime, Duration duration) throws Exception {
 		super(name, description);
+		setEnumTimePeriod(enumTimePeriod);
 		setStart(startTime);
 		setDuration(duration);
 	}
