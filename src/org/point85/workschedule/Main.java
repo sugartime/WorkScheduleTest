@@ -11,7 +11,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 	// write your code here
         Main m = new Main();
-        m.firstTest();;
+        m.firstTest();
     }
 
     public void firstTest() throws Exception {
@@ -35,9 +35,13 @@ public class Main {
         // 로테이션 시작일자
         LocalDate rotationStartDate = LocalDate.of(2021,2,1);
 
+
+
        schedule.createTeam("Team 1", "First team", rotation, rotationStartDate);
        schedule.createTeam("Team 2", "Second team", rotation, rotationStartDate.plusDays(1));
-      // schedule.createTeam("Team 3", "Third team", rotation, rotationStartDate.plusDays(2));
+       // schedule.createTeam("Team 3", "Third team", rotation, rotationStartDate.plusDays(2));
+
+        //System.out.println("");
 
         schedule.printShiftInstances(LocalDate.of(2021, 2, 1), LocalDate.of(2021, 2, 28));
 
@@ -59,6 +63,6 @@ public class Main {
 //        System.out.println("=============== duration :"+duration.getSeconds());
 
 
-        System.out.println("");
+        //System.out.println("");
     }
 }
