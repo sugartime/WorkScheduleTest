@@ -159,7 +159,13 @@ public class Team extends Named implements Comparable<Team> {
 			throw new Exception(msg);
 		}
 
-		return (int) (deltaDays % getRotation().getDuration().toDays()) + 1;
+		Duration secondsOfPeriodsSize= getRotation().getDuration();
+		long daysOfPeriodsSize = secondsOfPeriodsSize.toDays();
+
+
+		//return (int) (deltaDays % getRotation().getDuration().toDays()) + 1;
+
+		return (int) (deltaDays % daysOfPeriodsSize) + 1;
 	}
 	/**
 	 * Get the {@link ShiftInstance} for the specified day
