@@ -8,6 +8,13 @@ import java.util.List;
 
 public class Main {
 
+    /**
+     *   동작방법
+     *
+     *
+     *
+     */
+
     public static void main(String[] args) throws Exception {
 	// write your code here
         Main m = new Main();
@@ -32,7 +39,7 @@ public class Main {
         rotation.addSegment(day, 1, 0);  //주간근무 다음날 휴무 없음
         rotation.addSegment(night, 1, 2); //하루야간근무 2틀휴무
 
-        // 로테이션 시작일자
+        // 당직주기 시작일자
         LocalDate rotationStartDate = LocalDate.of(2021,2,1);
 
 
@@ -48,6 +55,8 @@ public class Main {
 
         // 해당날자에 근무팀별 근무상황을 가져온다.
         List<ShiftInstance> instances = schedule.getShiftInstancesForDay(LocalDate.of(2021, 2, 16));
+
+
 
 
 
