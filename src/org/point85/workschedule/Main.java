@@ -36,8 +36,9 @@ public class Main {
 
         // rotation (주야비휴 예제)
         Rotation rotation = new Rotation("DNO", "DNO");
-        rotation.addSegment(day, 1, 0);  //주간근무 다음날 휴무 없음
-        rotation.addSegment(night, 1, 2); //하루야간근무 2틀휴무
+        rotation.addSegment(day, 3, 0);  //주간근무 다음날 휴무 없음
+        rotation.addSegment(night, 1, 1); //하루야간근무 2틀휴무
+        rotation.addSegment(night, 1, 1); //하루야간근무 2틀휴무
 
         // 당직주기 시작일자
         LocalDate rotationStartDate = LocalDate.of(2021,2,1);
@@ -45,12 +46,12 @@ public class Main {
 
 
        schedule.createTeam("Team 1", "First team", rotation, rotationStartDate);
-       schedule.createTeam("Team 2", "Second team", rotation, rotationStartDate.plusDays(1));
+       //schedule.createTeam("Team 2", "Second team", rotation, rotationStartDate.plusDays(1));
        // schedule.createTeam("Team 3", "Third team", rotation, rotationStartDate.plusDays(2));
 
         //System.out.println("");
 
-        schedule.printShiftInstances(LocalDate.of(2021, 2, 1), LocalDate.of(2021, 2, 28));
+        schedule.printShiftInstances(LocalDate.of(2021, 2, 1), LocalDate.of(2021, 3, 31));
 
 
         // 해당날자에 근무팀별 근무상황을 가져온다.
