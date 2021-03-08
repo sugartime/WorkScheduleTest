@@ -45,11 +45,14 @@ public class RotationSegment implements Comparable<RotationSegment> {
 	// shift that starts this segment
 	private Shift startingShift;
 
-	// number of days on
+	// number of days on (주간 도는 야간 근무 갯수)
 	private int daysOn = 0;
 
-	// number of days off
+	// number of days off (비번갯수)
 	private int daysOff = 0;
+
+	// 휴무 갯수 (youngil 추가)
+	private int daysBreak = 0;
 
 	// primary key
 	private Integer primaryKey;
@@ -61,10 +64,11 @@ public class RotationSegment implements Comparable<RotationSegment> {
 
 	}
 
-	RotationSegment(Shift startingShift, int daysOn, int daysOff, Rotation rotation) {
+	RotationSegment(Shift startingShift, int daysOn, int daysOff, int  daysBreak , Rotation rotation) {
 		this.startingShift = startingShift;
 		this.daysOn = daysOn;
 		this.daysOff = daysOff;
+		this.daysBreak = daysBreak;
 		this.rotation = rotation;
 	}
 
@@ -120,6 +124,14 @@ public class RotationSegment implements Comparable<RotationSegment> {
 	 */
 	public void setDaysOff(int daysOff) {
 		this.daysOff = daysOff;
+	}
+
+	public int getDaysBreak() {
+		return daysBreak;
+	}
+
+	public void setDaysBreak(int daysBreak) {
+		this.daysBreak = daysBreak;
 	}
 
 	/**

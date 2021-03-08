@@ -35,11 +35,19 @@ import java.util.Objects;
  *
  */
 public class ShiftInstance implements Comparable<ShiftInstance> {
+
+	// youngil  추가
+	EnumTimePeriod enumTimePeriod;  // Shiift, DayOff, DayBreak 구분
+
+
 	// definition of the shift
 	private Shift shift;
 
-	// youngil  추가
+	// youngil  추가 (비번)
 	private DayOff dayOff;
+
+	// youngil 추가 (휴무)
+	private DayBreak dayBreak;
 
 
 	// team working it
@@ -48,6 +56,36 @@ public class ShiftInstance implements Comparable<ShiftInstance> {
 	// start date and time of day
 	private LocalDateTime startDateTime;
 
+	// youngil  만든 생성자
+	ShiftInstance(EnumTimePeriod enumTimePeriod, Object  object, LocalDateTime startDateTime, Team team) {
+
+		this.enumTimePeriod=enumTimePeriod;
+
+		switch (this.enumTimePeriod){
+			case SHIFT:
+				this.shift = (Shift) object;
+				this.dayOff=null;
+				this.dayBreak=null;
+				break;
+
+			case DAY_OFF:
+				this.shift = null;
+				this.dayOff = (DayOff) object;
+				this.dayBreak=null;
+				break;
+
+			case DAY_BREAK:
+				this.shift = null;
+				this.dayOff = null;
+				this.dayBreak = (DayBreak) object;
+				break;
+		}
+
+		this.startDateTime = startDateTime;
+		this.team = team;
+	}
+
+	//원래 생성자
 	ShiftInstance(Shift shift, LocalDateTime startDateTime, Team team) {
 		this.shift = shift;
 		this.startDateTime = startDateTime;
@@ -56,6 +94,12 @@ public class ShiftInstance implements Comparable<ShiftInstance> {
 
 	ShiftInstance(DayOff dayOff,LocalDateTime startDateTime,Team team) {
 		this.dayOff = dayOff;
+		this.startDateTime = startDateTime;
+		this.team = team;
+	}
+
+	ShiftInstance(DayBreak dayBreak,LocalDateTime startDateTime,Team team) {
+		this.dayBreak = dayBreak;
 		this.startDateTime = startDateTime;
 		this.team = team;
 	}
@@ -76,10 +120,20 @@ public class ShiftInstance implements Comparable<ShiftInstance> {
 	/**
 	 * Get the dayoff for this instance
 	 * youngil 추가
-	 * @return {@link Shift}
+	 * @return {@link DayOff}
 	 */
 	public DayOff getDayOff() {
 		return dayOff;
+	}
+
+
+	/**
+	 * Get the daybreak for this instance
+	 * youngil 추가
+	 * @return {@link DayBreak}
+	 */
+	public DayBreak getDayBreak() {
+		return dayBreak;
 	}
 
 
@@ -171,7 +225,26 @@ public class ShiftInstance implements Comparable<ShiftInstance> {
 		String ps = WorkSchedule.getMessage("period.start");
 		String pe = WorkSchedule.getMessage("period.end");
 
-		String  periodStr =  (this.shift==null) ? " " :   ", "+s + ": " + getShift().getName() + ", " +ps + ": "+getStartTime() + ", " + pe + ": " + getEndTime();
+		//String  periodStr =  (this.shift==null) ? " " :   ", "+s + ": " + getShift().getName() + ", " +ps + ": "+getStartTime() + ", " + pe + ": " + getEndTime();
+		String periodStr="";
+
+		switch (this.enumTimePeriod){
+			case SHIFT:
+				periodStr+=",shit : "+this.shift.getName();
+				periodStr+= ", " +ps + ": "+getStartTime() + ", " + pe + ": " + getEndTime();
+				break;
+
+			case DAY_OFF:
+				periodStr+=",dayoff : "+this.dayOff.getName();
+				periodStr+= ", " +ps + ": "+getStartTime()+ ", " + pe + ": " + startDateTime.plus(this.dayOff.getDuration());
+				break;
+
+			case DAY_BREAK:
+				periodStr+=",daybreak : "+this.dayBreak.getName();
+				periodStr+= ", " +ps + ": "+getStartTime()+ ", " + pe + ": " + startDateTime.plus(this.dayBreak.getDuration());
+				break;
+		}
+
 
 		return " " + t + ": " + getTeam().getName() +periodStr;
 	}

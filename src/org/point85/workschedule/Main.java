@@ -34,28 +34,37 @@ public class Main {
         Shift night = schedule.createShift("Night", "Night shift", LocalTime.of(19, 0, 0), Duration.ofHours(12));
 
 
-        // rotation (주야비휴 예제)
+        // rotation (주주주야비야비 예제)
         Rotation rotation = new Rotation("DNO", "DNO");
-        rotation.addSegment(day, 3, 0);  //주간근무 다음날 휴무 없음
-        rotation.addSegment(night, 1, 1); //하루야간근무 2틀휴무
-        rotation.addSegment(night, 1, 1); //하루야간근무 2틀휴무
+        rotation.addSegment(day, 3, 0,0);  //주간근무 3일
+        rotation.addSegment(night, 1, 1,0); //야간근무 1일 다음날휴무
+        rotation.addSegment(night, 1, 1,0); //야간근무 1일 다음날휴무
+
+
+        // rotation (주주야비야비주 예제)
+        Rotation rotation2 = new Rotation("DNO", "DNO");
+        rotation2.addSegment(day, 2, 0,0);  //주간근무 2일
+        rotation2.addSegment(night, 1, 1,0); //야간근무  다음날 비번
+        rotation2.addSegment(night, 1, 1,0); //야간근무  다음날 비번
+        rotation2.addSegment(day, 1, 0,0);  //주간근무 1일
+
 
         // 당직주기 시작일자
-        LocalDate rotationStartDate = LocalDate.of(2021,2,1);
+        LocalDate rotationStartDate = LocalDate.of(2021,2,28);
 
 
 
        schedule.createTeam("Team 1", "First team", rotation, rotationStartDate);
-       //schedule.createTeam("Team 2", "Second team", rotation, rotationStartDate.plusDays(1));
+       schedule.createTeam("Team 2", "Second team", rotation2, rotationStartDate);
        // schedule.createTeam("Team 3", "Third team", rotation, rotationStartDate.plusDays(2));
 
         //System.out.println("");
 
-        schedule.printShiftInstances(LocalDate.of(2021, 2, 1), LocalDate.of(2021, 3, 31));
+        schedule.printShiftInstances(LocalDate.of(2021, 3, 1), LocalDate.of(2021, 3, 31));
 
 
         // 해당날자에 근무팀별 근무상황을 가져온다.
-        List<ShiftInstance> instances = schedule.getShiftInstancesForDay(LocalDate.of(2021, 2, 16));
+        //List<ShiftInstance> instances = schedule.getShiftInstancesForDay(LocalDate.of(2021, 2, 16));
 
 
 

@@ -156,21 +156,21 @@ public class WorkSchedule extends Named implements Comparable<WorkSchedule> {
 			// check to see if this is a non-working day
 			boolean addShift = true;
 
-			LocalDate startDate =null;
-
-			if(instance.getStartTime()!=null) {
-				startDate = instance.getStartTime().toLocalDate();
-			}
+//			LocalDate startDate =null;
+//
+//			if(instance.getStartTime()!=null) {
+//				startDate = instance.getStartTime().toLocalDate();
+//			}
 
 			//사용안함으로 추정
-			for (NonWorkingPeriod nonWorkingPeriod : nonWorkingPeriods) {
-				if(startDate!=null){
-					if (nonWorkingPeriod.isInPeriod(startDate)) {
-						addShift = false;
-						break;
-					}
-				}
-			}
+//			for (NonWorkingPeriod nonWorkingPeriod : nonWorkingPeriods) {
+//				if(startDate!=null){
+//					if (nonWorkingPeriod.isInPeriod(startDate)) {
+//						addShift = false;
+//						break;
+//					}
+//				}
+//			}
 
 			if (addShift) {
 				workingShifts.add(instance);
@@ -252,7 +252,9 @@ public class WorkSchedule extends Named implements Comparable<WorkSchedule> {
 			throw new Exception(msg);
 		}
 
+		//teams list 에 할당
 		teams.add(team);
+		//team 과 workschedule 을 연결
 		team.setWorkSchedule(this);
 		return team;
 	}
@@ -494,12 +496,18 @@ public class WorkSchedule extends Named implements Comparable<WorkSchedule> {
 			throw new Exception(msg);
 		}
 
-		long days = end.toEpochDay() - start.toEpochDay() + 1;
 
+		// 루프 돌릴 날짜 구간
+		long days = end.toEpochDay() - start.toEpochDay() + 1; // toEpochDay : 1970-01-01부터 날짜를 세어서 반환한 숫자
+
+		// 시작날짜
 		LocalDate day = start;
 
 		System.out.println(getMessage("shifts.working"));
+
+		// 날짜구간으로 돌려
 		for (long i = 0; i < days; i++) {
+
 			System.out.println("[" + (i + 1) + "] " + getMessage("shifts.day") + ": " + day);
 
 
@@ -511,17 +519,27 @@ public class WorkSchedule extends Named implements Comparable<WorkSchedule> {
 			} else {
 				int count = 1;
 				for (ShiftInstance instance : instances) {
-					if(instance.getShift()!=null){
-						System.out.println("   (" + count + ")" + instance);
+
+
+					switch(instance.enumTimePeriod){
+						case SHIFT:
+							System.out.println("   (" + count + ")" + instance);
+							break;
+
+						case DAY_OFF:
+							System.out.println("   (" + count + ")" + " "+instance.getDayOff().getName()+instance);
+							break;
+
+						case DAY_BREAK:
+							System.out.println("   (" + count + ")" + " "+instance.getDayBreak().getName()+instance);
+							break;
 					}
 
-					if(instance.getDayOff()!=null){
-						System.out.println("   (" + count + ")" + " "+instance.getDayOff().getName()+instance);
-					}
 
 					count++;
 				}
 			}
+			//다음날짜
 			day = day.plusDays(1);
 		}
 	}

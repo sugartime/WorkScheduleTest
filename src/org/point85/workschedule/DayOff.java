@@ -50,11 +50,11 @@ class DayOff extends TimePeriod {
 
 	@Override
 	EnumTimePeriod getEnumTimePeriod() {
-		return this.enumTimePeriod;
+		return super.enumTimePeriod;
 	}
 
 	@Override
 	void setEnumTimePeriod(EnumTimePeriod enumTimePeriod) {
-		this.enumTimePeriod=enumTimePeriod;
+		super.enumTimePeriod=enumTimePeriod;
 	}
 }

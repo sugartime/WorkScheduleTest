@@ -7,8 +7,8 @@ package org.point85.workschedule;
 public enum EnumTimePeriod {
 
     SHIFT("SHIFT"),          //SHIFT
-    DAYOFF("DAYOFF"),  //DAYOFF
-    BREAK("BREAK");      //BREAK
+    DAY_OFF("DAY_OFF"),  //DAYOFF
+    DAY_BREAK("DAY_BREAK");      //BREAK
 
     final private String name;
 

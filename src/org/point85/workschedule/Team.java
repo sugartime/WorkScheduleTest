@@ -192,26 +192,18 @@ public class Team extends Named implements Comparable<Team> {
 		
 		int dayInRotation = -1;
 		try {
+			// day 가 ( periods 에 속한 근무중 어떤 근무인지 확인 )
+			// 주,주,주,야,비,야,비 라면 어디에 속하는지 확인
 			dayInRotation=getDayInRotation(day);
 		}catch (Exception ex){
 			 System.out.println("getShiftInstanceForDay():" +"end earier than start");
 			return null;
 		}
 		// shift or off shift
-		TimePeriod period = shiftRotation.getPeriods().get(dayInRotation - 1);
+		TimePeriod period = shiftRotation.getPeriods().get(dayInRotation - 1); // `
 
-		if (period.isWorkingPeriod()) {
-			LocalDateTime startDateTime = LocalDateTime.of(day, period.getStart());
-			instance = new ShiftInstance((Shift) period, startDateTime, this);
-		}else{
-			//  youngil 추가
-			LocalDateTime startDateTime = LocalDateTime.of(day, LocalTime.MIDNIGHT);
-			if(period.enumTimePeriod.equals(EnumTimePeriod.DAYOFF)){
-				instance = new ShiftInstance((DayOff)period,startDateTime,this);
-			}
-
-		}
-
+		LocalDateTime startDateTime =  LocalDateTime.of(day, period.getStart());
+		instance = new ShiftInstance(period.getEnumTimePeriod() , period, startDateTime, this);
 		return instance;
 	}
 

@@ -46,11 +46,19 @@ public class Rotation extends Named implements Comparable<Rotation> {
 	// list of working and non-working days
 	private List<TimePeriod> periods;
 
-	// name of the day off time period
+	// 비번 이름
 	public static final String DAY_OFF_NAME = "DAY_OFF";
 
-	// 24-hour day off period
+	// 비번 객체
 	private static final DayOff DAY_OFF = initializeDayOff();
+
+
+	// 휴무 이름
+	public static final String DAY_BREAK_NAME = "DAY_BREAK";
+	
+	// 휴무 객체 
+	private static final DayBreak DAY_BREAK = initializeDayBreak();
+
 
 	// owning work schedule
 	private WorkSchedule workSchedule;
@@ -73,16 +81,27 @@ public class Rotation extends Named implements Comparable<Rotation> {
 		super(name, description);
 	}
 
-	// create the day-off
+	// 비번 객체 09:00 부터 비번시작
 	private static DayOff initializeDayOff() {
 		DayOff dayOff = null;
 		try {
 
-			dayOff = new DayOff(DAY_OFF_NAME, "24 hour off period",EnumTimePeriod.DAYOFF, LocalTime.MIDNIGHT, Duration.ofHours(24));
+			dayOff = new DayOff(DAY_OFF_NAME, "09 After off period",EnumTimePeriod.DAY_OFF, LocalTime.of(9, 00, 00), Duration.ofHours(24));
 		} catch (Exception e) {
 			// ignore
 		}
 		return dayOff;
+	}
+
+	// 휴무객체 24시간 휴무
+	private static DayBreak initializeDayBreak() {
+		DayBreak dayBreak = null;
+		try {
+			dayBreak = new DayBreak(DAY_BREAK_NAME, "24 hour off period",EnumTimePeriod.DAY_BREAK, LocalTime.MIDNIGHT, Duration.ofHours(24));
+		} catch (Exception e) {
+			// ignore
+		}
+		return dayBreak;
 	}
 
 	/**
@@ -98,7 +117,7 @@ public class Rotation extends Named implements Comparable<Rotation> {
 			Collections.sort(rotationSegments);
 
 			for (RotationSegment segment : rotationSegments) {
-				// DayShift 또는 NightShift 일 것이다
+				// DayShift (주간근무) 또는 NightShift  (야간근무)
 				if (segment.getStartingShift() != null) {
 
 					//daysOn 의 숫자 만큼 DayShift 또는 NightShift  를 추가한다.
@@ -108,9 +127,14 @@ public class Rotation extends Named implements Comparable<Rotation> {
 					}
 				}
 
-				// add the off days
+				// 비번 갯수 만큼 추가
 				for (int i = 0; i < segment.getDaysOff(); i++) {
 					periods.add(Rotation.DAY_OFF);
+				}
+
+				// 휴무 갯수 만큼 추가
+				for (int i = 0; i < segment.getDaysBreak(); i++) {
+					periods.add(Rotation.DAY_BREAK);
 				}
 			}
 		}
@@ -167,16 +191,17 @@ public class Rotation extends Named implements Comparable<Rotation> {
 	 *  이 순환에 작업 기간을 추가합니다. 근무 기간은 교대 근무로 시작하여 근무일과 휴일을 지정합니다.
 	 *
 	 * @param startingShift {@link Shift} that starts the period
-	 * @param daysOn        근무 일수 
-	 * @param daysOff       근무 off 일수
+	 * @param daysOn        근무 갯수 (Shift 객체의 수)  - 주간 또는 야간 근무
+	 * @param daysOff       근무 off 갯수  (DayOff 객체의 수) - 비번
+	 * @param daysBreak    휴무 갯수  (DayOff 객체의 수) - 휴무 (youngil 추가)
 	 * @return {@link RotationSegment}
 	 * @throws Exception Exception
 	 */
-	public RotationSegment addSegment(Shift startingShift, int daysOn, int daysOff) throws Exception {
+	public RotationSegment addSegment(Shift startingShift, int daysOn, int daysOff, int daysBreak) throws Exception {
 		if (startingShift == null) {
 			throw new Exception("The starting shift must be specified.");
 		}
-		RotationSegment segment = new RotationSegment(startingShift, daysOn, daysOff, this);
+		RotationSegment segment = new RotationSegment(startingShift, daysOn, daysOff, daysBreak, this);
 		rotationSegments.add(segment);
 		int nSize = rotationSegments.size();
 		segment.setSequence(nSize);
