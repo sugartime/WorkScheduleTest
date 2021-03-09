@@ -82,7 +82,6 @@ public class Main {
         LocalDate rotationStartDate = LocalDate.of(2021,2,28);
 
 
-
        schedule.createTeam("Team 1", "First team", rotation, rotationStartDate);
        schedule.createTeam("Team 2", "Second team", rotation2, rotationStartDate);
        // schedule.createTeam("Team 3", "Third team", rotation, rotationStartDate.plusDays(2));
