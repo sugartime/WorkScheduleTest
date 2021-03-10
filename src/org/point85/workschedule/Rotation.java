@@ -142,6 +142,12 @@ public class Rotation extends Named implements Comparable<Rotation> {
 		return periods;
 	}
 
+	//  periods 설정
+	//  같은날, 같은주기로 당직이 돌아가는 팀이 있으면, 팀의 주기를 변경할 경우 사용
+	public void setPeriods(List<TimePeriod> periods) {
+		this.periods = periods;
+	}
+
 	/**
 	 * Get the number of days in the rotation
 	 * 

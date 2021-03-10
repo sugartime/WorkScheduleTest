@@ -26,26 +26,29 @@ public class Main {
     // 한팀은 주간근무, 한팀은 주간근무, 한팀은 주간근무, 한팀은 야간근무 일때
     // 지정된 로테이션 (주,주,주,야,비,야,,비) 중 어떤 근무의 시작에 해당하는지 설정하고
     // preriods 를 변경하여 설정한다..
-    public  List<TimePeriod> calculatePeriods(Rotation rotation,int startIndex){
+    public  List<TimePeriod> changePeriods(Rotation rotation,int startIndex){
         List<TimePeriod> periods = rotation.getPeriods();
 
-        int periodsSize = periods.size();
-        int loopLen = periods.size()-1;
 
-        List<TimePeriod>periodsTmp= new ArrayList<>();
+        int periodsSize = periods.size(); // list에 들어가 있는 아이템 갯수
+
+
+        // periods 변경
+       List<TimePeriod>chgPeriods = new ArrayList<>();
         int loopCnt=1; //루프를 몇번돌았는지확인
-        for(int i=startIndex;i<=loopLen;i++){
-            periodsTmp.add(periods.get(i));
+        for(int i=startIndex;i<periodsSize;i++){
+            chgPeriods.add(periods.get(i));
             loopCnt++;
         }
 
         //나머지
-        if(loopCnt<periodsSize){
-            for(int j=0;j<periodsSize-loopCnt;j++){
-                periodsTmp.add(periods.get(j));
+        int remainCnt = periodsSize-chgPeriods.size();
+        if(remainCnt>0){
+            for(int j=0;j<remainCnt;j++){
+                chgPeriods.add(periods.get(j));
             }
         }
-         return periodsTmp;
+         return chgPeriods;
     }
 
     public void firstTest() throws Exception {
@@ -68,22 +71,23 @@ public class Main {
         rotation.addSegment(night, 1, 1,0); //야간근무 1일 다음날비번
 
 
-        calculatePeriods(rotation,1);
 
-        // rotation (주주야비야비주 예제)
-        Rotation rotation2 = new Rotation("DNO", "DNO");
-        rotation2.addSegment(day, 2, 0,0);  //주간근무 2일
-        rotation2.addSegment(night, 1, 1,0); //야간근무  다음날 비번
-        rotation2.addSegment(night, 1, 1,0); //야간근무  다음날 비번
-        rotation2.addSegment(day, 1, 0,0);  //주간근무 1일
 
 
         // 당직주기 시작일자
-        LocalDate rotationStartDate = LocalDate.of(2021,2,28);
-
+        LocalDate rotationStartDate = LocalDate.of(2021,3,1);
 
        schedule.createTeam("Team 1", "First team", rotation, rotationStartDate);
-       schedule.createTeam("Team 2", "Second team", rotation2, rotationStartDate);
+
+
+        // 같은날, 같은주기로 당직이 돌아가는 팀이 있으면, 팀의 주기를 변경한다.
+        // 주,주,주,야,비,야,비 -> 두번째 주 로 시작
+        List<TimePeriod> chgPeriods =  changePeriods(rotation,1);
+
+       Team team2 = schedule.createTeam("Team 2", "Second team", rotation, rotationStartDate);
+       team2.getRotation().setPeriods(chgPeriods);
+
+
        // schedule.createTeam("Team 3", "Third team", rotation, rotationStartDate.plusDays(2));
 
         //System.out.println("");
