@@ -34,11 +34,11 @@ import java.util.Objects;
 /**
  * Class Rotation maintains a sequenced list of shift and off-shift time
  * periods.
- * 
+ * Cloneable 은  CloneUtils.clone() 으로 deep copy 하기 위해 사용함 (commons-lang) *
  * @author Kent Randall
  *
  */
-public class Rotation extends Named implements Comparable<Rotation> {
+public class Rotation extends Named implements Comparable<Rotation>,Cloneable{
 
 	// working periods in the rotation
 	private List<RotationSegment> rotationSegments = new ArrayList<>();
@@ -290,5 +290,14 @@ public class Rotation extends Named implements Comparable<Rotation> {
 
 		return named + "\n" + rper + ": [" + periodsString + "], " + rd + ": " + getDuration() + ", " + rda + ": "
 				+ getDuration().toDays() + ", " + rw + ": " + getWorkingTime();
+	}
+
+
+	/**
+	 *  딥카피용 Cloneable 구현
+	 */
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 }
