@@ -71,22 +71,23 @@ public class Main {
         rotation.addSegment(night, 1, 1,0); //야간근무 1일 다음날비번
 
 
-        changePeriods(rotation,1);
 
-        // rotation (주주야비야비주 예제)
-        Rotation rotation2 = new Rotation("DNO", "DNO");
-        rotation2.addSegment(day, 2, 0,0);  //주간근무 2일
-        rotation2.addSegment(night, 1, 1,0); //야간근무  다음날 비번
-        rotation2.addSegment(night, 1, 1,0); //야간근무  다음날 비번
-        rotation2.addSegment(day, 1, 0,0);  //주간근무 1일
 
 
         // 당직주기 시작일자
-        LocalDate rotationStartDate = LocalDate.of(2021,2,28);
-
+        LocalDate rotationStartDate = LocalDate.of(2021,3,1);
 
        schedule.createTeam("Team 1", "First team", rotation, rotationStartDate);
-       schedule.createTeam("Team 2", "Second team", rotation2, rotationStartDate);
+
+
+        // 같은날, 같은주기로 당직이 돌아가는 팀이 있으면, 팀의 주기를 변경한다.
+        // 주,주,주,야,비,야,비 -> 두번째 주 로 시작
+        List<TimePeriod> chgPeriods =  changePeriods(rotation,1);
+
+       Team team2 = schedule.createTeam("Team 2", "Second team", rotation, rotationStartDate);
+       team2.getRotation().setPeriods(chgPeriods);
+
+
        // schedule.createTeam("Team 3", "Third team", rotation, rotationStartDate.plusDays(2));
 
         //System.out.println("");

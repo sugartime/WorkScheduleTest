@@ -24,17 +24,18 @@ SOFTWARE.
 
 package org.point85.workschedule;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalTime;
 
 /**
  * Class TimePeriod is a named period of time with a specified duration and
  * starting time of day.
- * 
+ * Cloneable 은  CloneUtils.clone() 으로 deep copy 하기 위해 사용함 (commons-lang)
  * @author Kent Randall
  *
  */
-abstract class TimePeriod extends Named {
+abstract public class TimePeriod extends Named implements Cloneable {
 	private static final int SECONDS_PER_DAY = 24 * 60 * 60;
 
 	// starting time of day
@@ -98,7 +99,7 @@ abstract class TimePeriod extends Named {
 	 * @param startTime Start time
 	 * @throws Exception exception
 	 */
-	public void setStart(LocalTime startTime) throws Exception {
+	public void setStart(LocalTime startTime) throws Exception  	{
 		if (startTime == null) {
 			throw new Exception(WorkSchedule.getMessage("start.not.defined"));
 		}
@@ -169,5 +170,13 @@ abstract class TimePeriod extends Named {
 		}
 
 		return text;
+	}
+
+	/**
+	 * 딥카피용 Cloneable 구현
+	 */
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 }
