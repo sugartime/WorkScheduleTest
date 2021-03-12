@@ -521,20 +521,7 @@ public class WorkSchedule extends Named implements Comparable<WorkSchedule> {
 				for (ShiftInstance instance : instances) {
 
 
-					switch(instance.enumTimePeriod){
-						case SHIFT:
-							System.out.println("   (" + count + ")" + instance);
-							break;
-
-						case DAY_OFF:
-							System.out.println("   (" + count + ")" + " "+instance.getDayOff().getName()+instance);
-							break;
-
-						case DAY_BREAK:
-							System.out.println("   (" + count + ")" + " "+instance.getDayBreak().getName()+instance);
-							break;
-					}
-
+					System.out.println("   (" + count + ")" + instance);
 
 					count++;
 				}
