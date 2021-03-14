@@ -1,23 +1,28 @@
 package org.point85.workschedule;
 
+import org.apache.commons.lang3.SerializationUtils;
+import org.apache.http.client.utils.CloneUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
 
 public class Main {
 
-    /**
-     *   동작방법
-     *
-     *
-     *
-     */
+    // 로거객체 얻기
+    Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) throws Exception {
-	// write your code here
+
+
+        // write your code here
         Main m = new Main();
         m.firstTest();
     }
@@ -26,18 +31,25 @@ public class Main {
     // 한팀은 주간근무, 한팀은 주간근무, 한팀은 주간근무, 한팀은 야간근무 일때
     // 지정된 로테이션 (주,주,주,야,비,야,,비) 중 어떤 근무의 시작에 해당하는지 설정하고
     // preriods 를 변경하여 설정한다..
-    public  List<TimePeriod> changePeriods(Rotation rotation,int startIndex){
-        List<TimePeriod> periods = rotation.getPeriods();
+    public  List<TimePeriod> changePeriods(Rotation rotation,int startIndex) throws CloneNotSupportedException {
 
+        List<TimePeriod> srcPeriods = rotation.getPeriods();
 
-        int periodsSize = periods.size(); // list에 들어가 있는 아이템 갯수
+        int periodsSize = srcPeriods.size(); // list에 들어가 있는 아이템 갯수
 
+//        List<TimePeriod> periods = new ArrayList<>(periodsSize);
+
+//         //list 를 딥카피한다.
+//        for(TimePeriod item : srcPeriods){
+//           TimePeriod timePeriod = (TimePeriod) CloneUtils.clone(item);
+//            periods.add(timePeriod);
+//        }
 
         // periods 변경
-       List<TimePeriod>chgPeriods = new ArrayList<>();
+        List<TimePeriod>chgPeriods = new ArrayList<>();
         int loopCnt=1; //루프를 몇번돌았는지확인
         for(int i=startIndex;i<periodsSize;i++){
-            chgPeriods.add(periods.get(i));
+            chgPeriods.add(srcPeriods.get(i));
             loopCnt++;
         }
 
@@ -45,14 +57,14 @@ public class Main {
         int remainCnt = periodsSize-chgPeriods.size();
         if(remainCnt>0){
             for(int j=0;j<remainCnt;j++){
-                chgPeriods.add(periods.get(j));
+                chgPeriods.add(srcPeriods.get(j));
             }
         }
-         return chgPeriods;
+        return chgPeriods;
     }
 
     public void firstTest() throws Exception {
-        System.out.println("=============== 테스트");
+        logger.info("=============== 테스트");
 
         String description ="first test";
         WorkSchedule schedule = new WorkSchedule("DNO Plan", description);
@@ -77,23 +89,29 @@ public class Main {
         // 당직주기 시작일자
         LocalDate rotationStartDate = LocalDate.of(2021,3,1);
 
-       schedule.createTeam("Team 1", "First team", rotation, rotationStartDate);
+        Team team1 = schedule.createTeam("Team 1", "First team", rotation, rotationStartDate);
 
+
+
+        //당직주기를 딥카피 한다.
+        Rotation rotation2 = (Rotation) CloneUtils.clone(rotation);
+
+
+        System.out.println("rotation.periods"+rotation.getPeriods());
+        System.out.println("rotation2.periods"+rotation2.getPeriods());
 
         // 같은날, 같은주기로 당직이 돌아가는 팀이 있으면, 팀의 주기를 변경한다.
         // 주,주,주,야,비,야,비 -> 두번째 주 로 시작
-        List<TimePeriod> chgPeriods =  changePeriods(rotation,1);
+        List<TimePeriod> chgPeriods =  changePeriods(rotation2,1);
 
-       Team team2 = schedule.createTeam("Team 2", "Second team", rotation, rotationStartDate);
-       team2.getRotation().setPeriods(chgPeriods);
+        Team team2 = schedule.createTeam("Team 2", "Second team", rotation2, rotationStartDate);
+        team2.getRotation().setPeriods(chgPeriods); //변경한 주기를 할당당
 
-
-       // schedule.createTeam("Team 3", "Third team", rotation, rotationStartDate.plusDays(2));
+        // shedule.createTeam("Team 3", "Third team", rotation, rotationStartDate.plusDays(2));
 
         //System.out.println("");
 
         schedule.printShiftInstances(LocalDate.of(2021, 3, 1), LocalDate.of(2021, 3, 31));
-
 
         // 해당날자에 근무팀별 근무상황을 가져온다.
         //List<ShiftInstance> instances = schedule.getShiftInstancesForDay(LocalDate.of(2021, 2, 16));
