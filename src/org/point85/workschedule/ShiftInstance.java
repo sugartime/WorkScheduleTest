@@ -56,6 +56,11 @@ public class ShiftInstance implements Comparable<ShiftInstance> {
 	// start date and time of day
 	private LocalDateTime startDateTime;
 
+	//youngil 추가 team.의 정렬순서
+	private Integer teamOrderNo;
+
+
+
 	// youngil  만든 생성자
 	ShiftInstance(EnumTimePeriod enumTimePeriod, Object  object, LocalDateTime startDateTime, Team team) {
 
@@ -83,6 +88,7 @@ public class ShiftInstance implements Comparable<ShiftInstance> {
 
 		this.startDateTime = startDateTime;
 		this.team = team;
+		this.teamOrderNo=team.getOrderNo();
 	}
 
 	//원래 생성자
@@ -164,6 +170,20 @@ public class ShiftInstance implements Comparable<ShiftInstance> {
 		return team;
 	}
 
+
+	/**
+	 * youngil 추가
+	 * 팀의 정렬순서
+	 * @return team의 정렬순서
+	 */
+	public Integer getTeamOrderNo() {
+		return teamOrderNo;
+	}
+
+	public void setTeamOrderNo(int teamOrderNo) {
+		this.teamOrderNo = teamOrderNo;
+	}
+
 	/**
 	 * Determine if this time falls within the shift instance period
 	 * 
@@ -181,7 +201,11 @@ public class ShiftInstance implements Comparable<ShiftInstance> {
 	 */
 	@Override
 	public int compareTo(ShiftInstance other) {
-		return getStartTime().compareTo(other.getStartTime());
+
+		//return getStartTime().compareTo(other.getStartTime());  //<= 시작시간으로 정렬
+
+		return getTeamOrderNo().compareTo(other.getTeamOrderNo()); //<= 팀정렬순서로 정렬
+
 	}
 
 	/**

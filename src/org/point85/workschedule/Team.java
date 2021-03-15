@@ -49,6 +49,11 @@ public class Team extends Named implements Comparable<Team> {
 	// shift rotation days
 	private Rotation rotation;
 
+	// youngil 추가
+	// 팁이 추가가된 순서로 정렬하기 위해
+	// team list 에 추가된후 size 를 리턴해 설정
+	private Integer orderNo;
+
 	/**
 	 * Default constructor
 	 */
@@ -69,6 +74,20 @@ public class Team extends Named implements Comparable<Team> {
 	 */
 	public LocalDate getRotationStart() {
 		return rotationStart;
+	}
+
+
+	/**
+	 * youngil  추가
+	 * team 생성순서로 정렬하기위해
+	 * @return teamOrderNo
+	 */
+	public Integer getOrderNo() {
+		return orderNo;
+	}
+
+	public void setOrderNo(int orderNo) {
+		this.orderNo = orderNo;
 	}
 
 	/**

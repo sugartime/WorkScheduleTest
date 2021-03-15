@@ -24,6 +24,9 @@ SOFTWARE.
 
 package org.point85.workschedule;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.time.Duration;
@@ -47,6 +50,9 @@ import java.util.ResourceBundle;
  *
  */
 public class WorkSchedule extends Named implements Comparable<WorkSchedule> {
+	// 로거객체 얻기
+	Logger logger = LoggerFactory.getLogger(WorkSchedule.class);
+
 	// name of resource bundle with translatable strings for exception messages
 	private static final String MESSAGES_BUNDLE_NAME = "WorkScheduleMessage";
 
@@ -254,6 +260,10 @@ public class WorkSchedule extends Named implements Comparable<WorkSchedule> {
 
 		//teams list 에 할당
 		teams.add(team);
+
+		int nSize = teams.size();
+		team.setOrderNo(nSize);
+
 		//team 과 workschedule 을 연결
 		team.setWorkSchedule(this);
 		return team;
@@ -503,23 +513,23 @@ public class WorkSchedule extends Named implements Comparable<WorkSchedule> {
 		// 시작날짜
 		LocalDate day = start;
 
-		System.out.println(getMessage("shifts.working"));
+		logger.debug(getMessage("shifts.working"));
 
 		// 날짜구간으로 돌려
 		for (long i = 0; i < days; i++) {
 
-			System.out.println("[" + (i + 1) + "] " + getMessage("shifts.day") + ": " + day);
+			logger.debug(("[" + (i + 1) + "] " + getMessage("shifts.day") + ": " + day));
 
 
 			//요청한날짜의 ShiftInstance (Shift,Team 을갖고있는) 를 가져온다.
 			List<ShiftInstance> instances = getShiftInstancesForDay(day);
 
 			if (instances.isEmpty()) {
-				System.out.println("   " + getMessage("shifts.non.working"));
+				logger.debug(("   " + getMessage("shifts.non.working")));
 			} else {
 				int count = 1;
 				for (ShiftInstance instance : instances) {
-					System.out.println("   (" + count + ")" + instance);
+					logger.debug(("   (" + count + ")" + instance));
 					count++;
 				}
 			}

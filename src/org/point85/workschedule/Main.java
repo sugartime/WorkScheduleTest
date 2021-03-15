@@ -1,16 +1,13 @@
 package org.point85.workschedule;
 
-import org.apache.commons.lang3.SerializationUtils;
 import org.apache.http.client.utils.CloneUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -64,7 +61,7 @@ public class Main {
     }
 
     public void firstTest() throws Exception {
-        logger.info("=============== 테스트");
+        logger.debug("=============== 테스트");
 
         String description ="first test";
         WorkSchedule schedule = new WorkSchedule("DNO Plan", description);
@@ -97,8 +94,8 @@ public class Main {
         Rotation rotation2 = (Rotation) CloneUtils.clone(rotation);
 
 
-        System.out.println("rotation.periods"+rotation.getPeriods());
-        System.out.println("rotation2.periods"+rotation2.getPeriods());
+        logger.debug("rotation.periods"+rotation.getPeriods());
+        logger.debug("rotation2.periods"+rotation2.getPeriods());
 
         // 같은날, 같은주기로 당직이 돌아가는 팀이 있으면, 팀의 주기를 변경한다.
         // 주,주,주,야,비,야,비 -> 두번째 주 로 시작
